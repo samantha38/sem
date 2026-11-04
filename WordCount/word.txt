@@ -1,0 +1,31 @@
+mkdir WordCount
+cd WordCount
+
+nano DistinctWordMapper.java
+nano DistinctWordReducer.java
+nano DistinctWordDriver.java
+
+mkdir input
+nano input.txt
+
+Hello Hadoop
+Hello World
+Hadoop World
+
+mv input.txt input/
+
+mkdir classes
+
+javac -classpath "$(hadoop classpath)" -d classes *.java
+
+jar -cvf wordcount.jar -C classes .
+
+hdfs dfs -mkdir -p /wordcount/input
+
+hdfs dfs -put input/input.txt /wordcount/input/
+
+hdfs dfs -ls /wordcount/input
+
+hadoop jar wordcount.jar DistinctWordDriver /wordcount/input /wordcount/output
+
+hdfs dfs -cat /wordcount/output/part-r-00000

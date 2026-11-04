@@ -1,0 +1,100 @@
+sudo service mongod start
+mongosh
+
+use hospital
+
+db
+
+db.createCollection("patients")
+
+show collections
+
+db.patients.insertOne({
+    patient_id: 101,
+    name: "Rahul Sharma",
+    age: 25,
+    gender: "Male",
+    disease: "Fever",
+    doctor: "Dr. Mehta",
+    room_no: 101,
+    bill: 2000
+})
+
+db.patients.insertMany([
+    {
+        patient_id: 102,
+        name: "Priya Shah",
+        age: 30,
+        gender: "Female",
+        disease: "Diabetes",
+        doctor: "Dr. Patil",
+        room_no: 102,
+        bill: 5000
+    },
+    {
+        patient_id: 103,
+        name: "Amit Verma",
+        age: 45,
+        gender: "Male",
+        disease: "Heart Disease",
+        doctor: "Dr. Mehta",
+        room_no: 103,
+        bill: 12000
+    },
+    {
+        patient_id: 104,
+        name: "Sneha Joshi",
+        age: 22,
+        gender: "Female",
+        disease: "Migraine",
+        doctor: "Dr. Kulkarni",
+        room_no: 104,
+        bill: 3000
+    },
+    {
+        patient_id: 105,
+        name: "Karan Singh",
+        age: 60,
+        gender: "Male",
+        disease: "Arthritis",
+        doctor: "Dr. Patil",
+        room_no: 105,
+        bill: 8000
+    }
+])
+
+db.patients.find()
+
+db.patients.find().pretty()
+
+db.patients.findOne({patient_id: 101})
+
+db.patients.find({age: {$gt: 40}})
+
+db.patients.find({bill: {$lt: 5000}})
+
+db.patients.find({
+    bill: {$gte: 3000, $lte: 10000}
+})
+
+db.patients.updateOne(
+    {patient_id: 101},
+    {$set: {disease: "Viral Fever"}}
+)
+
+db.patients.updateOne(
+    {patient_id: 102},
+    {$set: {room_no: 110}}
+)
+
+db.patients.updateMany(
+    {doctor: "Dr. Mehta"},
+    {$set: {room_no: 120}}
+)
+
+db.patients.deleteOne({patient_id: 105})
+
+db.patients.deleteMany({gender: "Male"})
+
+db.patients.deleteMany({})
+

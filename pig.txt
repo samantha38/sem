@@ -1,0 +1,66 @@
+Apache Pig – Agriculture Data Analysis (Local Mode)
+
+1. Start Pig
+cd ~/pig
+pig -x local
+
+
+Query 1: Load dataset
+agriculture = LOAD 'crop_production.csv' USING PigStorage(',') AS (State_Name:chararray, District_Name:chararray, Crop_Year:int, Season:chararray, Crop:chararray, Area:float, Production:float);
+agriculture = FILTER agriculture BY State_Name != 'State_Name';
+
+
+Query 2: Dump and Describe
+DUMP agriculture;
+DESCRIBE agriculture;
+
+
+Query 3: Group records State-wise
+grouped_data = GROUP agriculture BY State_Name;
+DUMP grouped_data;
+
+
+Query 4: Highest produced crop from each State
+max_production = FOREACH grouped_data GENERATE group AS State_Name, MAX(agriculture.Production) AS Max_Production;
+
+joined_data = JOIN agriculture BY (State_Name, Production), max_production BY (State_Name, Max_Production);
+
+top_crops = FOREACH joined_data GENERATE agriculture::State_Name, agriculture::District_Name, agriculture::Crop_Year, agriculture::Season, agriculture::Crop, agriculture::Area, agriculture::Production;
+
+DUMP top_crops;
+
+
+Query 5: Store output in local filesystem
+STORE top_crops INTO '/home/samantha/pig/output/data_top' USING PigStorage(',');
+
+
+Query 6: Transfer output to HDFS
+
+First exit Pig:
+quit;
+
+
+Then execute in Ubuntu terminal:
+hdfs dfs -mkdir -p /user/samantha/agriculture
+hdfs dfs -put /home/samantha/pig/output/data_top /user/samantha/agriculture/
+hdfs dfs -ls /user/samantha/agriculture
+hdfs dfs -cat /user/samantha/agriculture/data_top/part-*
+
+
+
+Dataset: crop_production.csv
+State_Name,District_Name,Crop_Year,Season,Crop,Area,Production
+Maharashtra,Pune,2022,Kharif,Rice,100,500
+Maharashtra,Nashik,2022,Rabi,Wheat,200,800
+Maharashtra,Pune,2022,Kharif,Sugarcane,150,1200
+Gujarat,Ahmedabad,2022,Kharif,Cotton,100,600
+Gujarat,Surat,2022,Rabi,Wheat,150,900
+Gujarat,Ahmedabad,2022,Kharif,Groundnut,120,700
+Punjab,Ludhiana,2022,Rabi,Wheat,200,1500
+Punjab,Amritsar,2022,Kharif,Rice,180,1100
+Punjab,Ludhiana,2022,Rabi,Cotton,100,400
+Karnataka,Mysore,2022,Kharif,Ragi,100,450
+
+
+If you run STORE again and get an error saying the output directory already exists, delete it first from Ubuntu:
+rm -r /home/samantha/pig/output/data_to

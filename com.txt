@@ -1,0 +1,21 @@
+hdfs dfs -mkdir /folder
+
+hdfs dfs -put input.txt /folder/
+
+hdfs dfs -cp /folder/input.txt /folder2/
+
+hdfs dfs -cat /folder/input.txt
+
+hdfs dfs -rm /folder/input.txt
+
+hdfs dfs -rm -r /folder
+
+hdfs dfs -get /folder/input.txt .
+
+hdfs dfs -mv /folder/input.txt /folder/data.txt
+
+hdfs dfs -count /folder
+
+hdfs dfs -du -h /folder
+
+hdfs dfs -appendToFile local.txt /folder/input.txt	

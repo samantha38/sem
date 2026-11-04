@@ -1,0 +1,89 @@
+sudo service mongod start
+
+mongosh
+
+use library
+
+db
+
+db.createCollection("books")
+
+show collections
+
+db.books.insertOne({
+    book_id: 101,
+    title: "Harry Potter",
+    author: "J K Rowling",
+    category: "Fantasy",
+    price: 500,
+    available: true
+})
+
+db.books.find()
+
+db.books.insertMany([
+    {
+        book_id: 102,
+        title: "Wings of Fire",
+        author: "APJ Abdul Kalam",
+        category: "Biography",
+        price: 300,
+        available: true
+    },
+    {
+        book_id: 103,
+        title: "The Alchemist",
+        author: "Paulo Coelho",
+        category: "Fiction",
+        price: 250,
+        available: false
+    },
+    {
+        book_id: 104,
+        title: "Atomic Habits",
+        author: "James Clear",
+        category: "Self-help",
+        price: 450,
+        available: true
+    },
+    {
+        book_id: 105,
+        title: "Rich Dad Poor Dad",
+        author: "Robert Kiyosaki",
+        category: "Finance",
+        price: 350,
+        available: true
+    }
+])
+
+db.books.findOne({book_id: 101})
+
+db.books.find({author: "APJ Abdul Kalam"})
+
+db.books.find({price: {$gt: 300}})
+
+db.books.find({available: true})
+
+
+
+db.books.updateOne(
+    {book_id: 101},
+    {$set: {price: 600}}
+)
+
+db.books.updateOne(
+    {book_id: 103},
+    {$set: {available: true}}
+)
+
+db.books.updateOne(
+    {book_id: 102},
+    {$inc: {price: 100}}
+)
+
+db.books.deleteOne({book_id: 105})
+
+db.books.deleteMany({available: false})
+
+db.books.deleteMany({})
+

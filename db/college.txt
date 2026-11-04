@@ -1,0 +1,266 @@
+
+// sudo service mongod start
+// mongosh
+
+// 2. CREATE DATABASE
+use College
+
+// 3. CREATE COLLECTIONS
+db.createCollection("students")
+db.createCollection("faculty")
+db.createCollection("courses")
+
+// 4. INSERT - STUDENTS
+
+db.students.insertOne({
+    student_id: 101,
+    name: "Rahul Sharma",
+    age: 20,
+    gender: "Male",
+    department: "Computer Engineering",
+    year: 3,
+    cgpa: 8.5,
+    city: "Mumbai"
+})
+
+db.students.insertMany([
+    {
+        student_id: 102,
+        name: "Priya Shah",
+        age: 21,
+        gender: "Female",
+        department: "IT",
+        year: 4,
+        cgpa: 9.1,
+        city: "Thane"
+    },
+    {
+        student_id: 103,
+        name: "Amit Verma",
+        age: 19,
+        gender: "Male",
+        department: "Computer Engineering",
+        year: 2,
+        cgpa: 7.8,
+        city: "Navi Mumbai"
+    },
+    {
+        student_id: 104,
+        name: "Sneha Joshi",
+        age: 22,
+        gender: "Female",
+        department: "Electronics",
+        year: 4,
+        cgpa: 8.9,
+        city: "Mumbai"
+    },
+    {
+        student_id: 105,
+        name: "Karan Singh",
+        age: 20,
+        gender: "Male",
+        department: "IT",
+        year: 3,
+        cgpa: 7.5,
+        city: "Pune"
+    }
+])
+
+// 5. INSERT - FACULTY
+
+db.faculty.insertMany([
+    {
+        faculty_id: 201,
+        name: "Dr. Mehta",
+        department: "Computer Engineering",
+        subject: "DBMS",
+        experience: 10,
+        salary: 75000
+    },
+    {
+        faculty_id: 202,
+        name: "Prof. Patil",
+        department: "IT",
+        subject: "Java",
+        experience: 8,
+        salary: 65000
+    },
+    {
+        faculty_id: 203,
+        name: "Dr. Shah",
+        department: "Electronics",
+        subject: "Microprocessors",
+        experience: 12,
+        salary: 80000
+    }
+])
+
+// 6. INSERT - COURSES
+
+db.courses.insertMany([
+    {
+        course_id: 301,
+        course_name: "Database Management Systems",
+        department: "Computer Engineering",
+        credits: 4,
+        semester: 5
+    },
+    {
+        course_id: 302,
+        course_name: "Java Programming",
+        department: "IT",
+        credits: 3,
+        semester: 4
+    },
+    {
+        course_id: 303,
+        course_name: "Machine Learning",
+        department: "Computer Engineering",
+        credits: 4,
+        semester: 7
+    }
+])
+
+// 7. READ - DISPLAY RECORDS
+
+// Display all students
+db.students.find()
+
+// Display in formatted manner
+db.students.find().pretty()
+
+// Find one student
+db.students.findOne({student_id: 101})
+
+// Find students from Computer Engineering
+db.students.find({department: "Computer Engineering"})
+
+// Find female students
+db.students.find({gender: "Female"})
+
+// Find students with CGPA greater than 8
+db.students.find({cgpa: {$gt: 8}})
+
+// Find students with CGPA less than 8
+db.students.find({cgpa: {$lt: 8}})
+
+// Find students with CGPA between 7 and 9
+db.students.find({cgpa: {$gte: 7, $lte: 9}})
+
+// Find students in year 4
+db.students.find({year: 4})
+
+// Find students from Mumbai OR Thane
+db.students.find({
+    $or: [
+        {city: "Mumbai"},
+        {city: "Thane"}
+    ]
+})
+
+// Display only name and CGPA
+db.students.find({}, {name: 1, cgpa: 1, _id: 0})
+
+// Sort students by CGPA ascending
+db.students.find().sort({cgpa: 1})
+
+// Sort students by CGPA descending
+db.students.find().sort({cgpa: -1})
+
+// Display first 2 students
+db.students.find().limit(2)
+
+// Count students
+db.students.countDocuments()
+
+// 8. READ - FACULTY AND COURSES
+
+db.faculty.find()
+db.faculty.find({department: "IT"})
+db.faculty.find({experience: {$gt: 8}})
+db.courses.find()
+db.courses.find({credits: 4})
+
+// 9. UPDATE - MODIFY STUDENTS
+
+// Update one student's CGPA
+db.students.updateOne(
+    {student_id: 101},
+    {$set: {cgpa: 9.0}}
+)
+
+// Update student's city
+db.students.updateOne(
+    {student_id: 102},
+    {$set: {city: "Mumbai"}}
+)
+
+// Update multiple students
+db.students.updateMany(
+    {department: "Computer Engineering"},
+    {$set: {year: 4}}
+)
+
+// Increment CGPA
+db.students.updateOne(
+    {student_id: 103},
+    {$inc: {cgpa: 0.2}}
+)
+
+// Rename a field
+db.students.updateOne(
+    {student_id: 101},
+    {$rename: {city: "location"}}
+)
+
+// Update faculty salary
+db.faculty.updateOne(
+    {faculty_id: 201},
+    {$set: {salary: 85000}}
+)
+
+// Update course credits
+db.courses.updateOne(
+    {course_id: 301},
+    {$set: {credits: 5}}
+)
+
+// 10. DELETE - REMOVE RECORDS
+
+// Delete one student
+db.students.deleteOne({student_id: 105})
+
+// Delete multiple students
+db.students.deleteMany({city: "Mumbai"})
+
+// Delete one faculty
+db.faculty.deleteOne({faculty_id: 203})
+
+// Delete one course
+db.courses.deleteOne({course_id: 303})
+
+// Delete all student documents
+// db.students.deleteMany({})
+
+// 11. ADDITIONAL COMMANDS
+
+// Show all databases
+show dbs
+
+// Show current database
+db
+
+// Show collections
+show collections
+
+// Count students
+db.students.countDocuments()
+
+// Drop a collection
+// db.students.drop()
+
+// Drop entire database
+// db.dropDatabase()
+
+// Exit MongoDB shell
+exit
